@@ -1,0 +1,149 @@
+<html>
+<head>
+<script type="text/javascript">
+window.onload = function(){
+	//canvas initialization
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	//dimensions
+	var W = canvas.width;
+	var H = canvas.height;
+	//time variables
+        var d = 0;
+	var days = 0;
+	var second = 0;
+	var minute = 0;
+	var hour = 0;
+	var weekday = 0;
+	var date = 0;
+	var month = 0;
+	//colors
+	var second_c = "#222";
+	var minute_c = "#222";
+	var hour_c = "#222";
+	var weekday_c = "#222";
+	var date_c = "#222";
+	var month_c = "#222";
+	
+        var tab_days = {1:"Mon",2:"Tue",3:"Wed",4:"Thu",5:"Fri",6:"Sat",7:"Sun"};
+        var tab_months = {1:"Jan",2:"Feb",3:"Mar",4:"Apr",5:"May",6:"Jun",7:"Jul",8:"Aug",9:"Sep",10:"Oct",11:"Nov",12:"Dec"};
+        
+        
+        function setColors(){
+            second_c = "hsl("+(second*360)+",50%,50%)";
+            minute_c = "hsl("+(minute*360)+",50%,50%)";
+            hour_c = "hsl("+(hour*360)+",50%,50%)";
+            weekday_c ="hsl("+(weekday*360)+",50%,50%)";
+            date_c = "hsl("+(date*360)+",50%,50%)";
+            month_c = "hsl("+(month*360)+",50%,50%)";
+        }
+        
+        //set times in percentages
+        function setTimes(){
+            d = new Date();
+            days = 32 - new Date(d.getYear(), d.getMonth(), 32).getDate();
+
+            second = (d.getSeconds() + d.getMilliseconds() / 1000)/60;
+            minute = (d.getMinutes() + second)/60;
+            hour = (d.getHours() + minute)/12;
+            hour_for_day = (d.getHours() + minute)/24;
+            weekday = (d.getDay() + hour_for_day)/7;
+            date = (d.getDate() - 1 + hour_for_day)/days;
+            month = (d.getMonth() + date)/12;
+        }
+        
+        function drawColor(radius,color){
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.arc(W/2, H/2, radius, 0, Math.PI*2, false); 
+            ctx.stroke();
+        }
+        
+        function drawPointer(radius,time){
+            ctx.beginPath();
+            ctx.strokeStyle = "#222";
+            ctx.arc(W/2, H/2, radius, timeToRadiant(time) - ((360/(radius))*(Math.PI/180)) - 0.5*Math.PI, timeToRadiant(time) - 0.5*Math.PI, false); 
+            ctx.stroke();
+        }
+        
+        function setText(){
+            ctx.beginPath();
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '15px Arial';
+            ctx.textBaseline = 'top';
+            ctx.textAlign = 'center';
+            ctx.fillText(d.getSeconds()+" s", 300, 12);
+            ctx.fillText(d.getMinutes()+" m", 300, 47);
+            ctx.fillText(d.getHours()+" h", 300, 82);
+            ctx.fillText(tab_days[d.getDay()], 300, 137);
+            ctx.fillText(d.getDate(), 300, 172);
+            ctx.fillText(tab_months[d.getMonth()+1], 300, 207);
+            ctx.stroke();
+        }
+        
+        function timeToRadiant(time){
+           return (time * 360) * (Math.PI / 180);
+        }
+        
+        //animation
+        function draw(){
+            
+            ctx.clearRect(0, 0, W, H);
+            ctx.lineWidth = 30;
+            ctx.shadowOffsetX = 0; 
+            ctx.shadowOffsetY = 0; 
+            ctx.shadowBlur = 10 ;
+            ctx.shadowColor = '#000';
+            
+            setTimes();
+            setColors();
+            
+            //seconds
+            drawColor(280,second_c);
+            drawPointer(280,second);
+            //minutes
+            drawColor(245,minute_c);
+            drawPointer(245,minute);
+            //hours
+            drawColor(210,hour_c);
+            drawPointer(210,hour);
+            //weekday
+            drawColor(155,weekday_c);
+            drawPointer(155,weekday);
+            //date
+            drawColor(120,date_c);
+            drawPointer(120,date);
+            //month
+            drawColor(85,month_c);
+            drawPointer(85,month);
+            
+            setText();
+        }
+        
+	setInterval(draw, 50); //Draw every 50 milliseconds
+}
+</script>
+<style>
+body {
+	background: #222;
+}
+#canvas {
+	display: block;
+	width: 600px;
+	margin: 50px auto;
+}
+h1{
+	font-family: 'Georgia';
+	width:250px;
+	margin:50px auto;
+	color:white;
+	text-align: center;
+	font-style: italic;
+}
+</style>
+</head>
+<body>
+	<h1>Polar Clock</h1>
+	<canvas id="canvas" width="600" height="600"></canvas>
+</body>
+</html>
