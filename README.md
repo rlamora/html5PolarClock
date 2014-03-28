@@ -7,4 +7,4 @@ Demo [here](http://www.romainlamora.fr/clock/)
 
 Inspired by [pixelbreaker] (http://blog.pixelbreaker.com/polarclock)
 
-Feel free to use and improve.
+Feel free to use and improve. 
